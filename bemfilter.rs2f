@@ -1,0 +1,773 @@
+meta { 
+	name = "Bem's filter"; 
+	description = "Late-mid game+ iron filter.
+All notable resources (besides some too low lvl ones) are in.
+Clue rewards and most of other clogs going directly into inventory are not tracked.
+
+Possibly left: furs? 
+"; 
+}
+
+// Sound IDs https://oldschool.runescape.wiki/w/List_of_sound_IDs
+// Area map https://mejrs.github.io/osrs [SW, NE] tiles
+
+#define MIN_RESOURCES_GENERAL 10
+#define MIN_RESOURCES_AMMO_COOKING 20
+#define MIN_RESOURCES_RARE 5
+#define MIN_HERBLORE_LOW_LEVEL 3
+#define MIN_HERBLORE_SECONDARIES 5
+#define MIN_HERBLORE_HIGH_LEVEL 1
+#define MIN_FARMING_LOW_LEVEL 3
+#define MIN_FARMING_HIGH_LEVEL 1
+#define MIN_CURRENCIES_RUNES_LOW_LEVEL 200
+#define MIN_CURRENCIES_RUNES_HIGH_LEVEL 50
+#define MIN_CURRENCIES_RUNES_PURE_ESS 150
+#define MIN_CURRENCIES_COINS 10_000
+#define MIN_HA_THRESHOLD 10_000
+
+#define FONT_SMALL 1
+#define FONT_NORMAL 2
+#define FONT_BOLD 3
+
+#define ACCOUNT_MAIN 0
+
+#define CONST_AREA_COX [3200, 5120, 0, 3391, 5759, 3]
+#define CONST_AREA_TOB [3136, 4224, 0, 3327, 4479, 3]
+#define CONST_AREA_TOA [3520, 5120, 0, 3967, 5439, 3]
+#define CONST_AREA_RAID(_) (area:CONST_AREA_COX || area:CONST_AREA_TOB || area:CONST_AREA_TOA)
+#define CONST_TAKEABLE(_) (accountType:ACCOUNT_MAIN || !ownership:OWNERSHIP_OTHER)
+
+#define CONST_COLOR_RESOURCES "#1e88e5"
+#define CONST_COLOR_SEEDS "#cffb2b"
+#define CONST_COLOR_HUNTER_SUPPLIES "#07f70b"
+#define CONST_COLOR_HERB_SUPPLIES "#11ba93"
+#define CONST_COLOR_CURRENCIES "#2ce51e"
+#define CONST_COLOR_SUPPLIES_HEALTH "#ffff00"
+#define CONST_COLOR_SUPPLIES_PRAYER "#00f4ff"
+#define CONST_COLOR_SUPPLIES_STAT_BOOST "#ff00ff"
+#define CONST_COLOR_UNIQUES "#ffff66b2"
+
+#define VAR_OWNERSHIP_IGNORE ["Dawnbringer"]
+// Rock near the mogre camp, required to go into the area, used in elite clues
+#define VAR_RANDOM_ITEMS_IDS [7533]
+
+#define VAR_GLOBAL_HIDE ["Adamant arrow*"]
+#define VAR_GLOBAL_SHOW []
+
+rule (name:VAR_GLOBAL_HIDE) {
+    hidden = true;
+}
+
+rule (name:VAR_GLOBAL_SHOW || id:VAR_RANDOM_ITEMS_IDS) {
+    hidden = false;
+}
+
+rule (!CONST_TAKEABLE(0) && !name:VAR_OWNERSHIP_IGNORE) {
+	hidden = true;
+}
+
+rule (!CONST_AREA_RAID(0) && ownership:OWNERSHIP_NONE && !name:VAR_OWNERSHIP_IGNORE) {
+	hidden = true;
+}
+// -------------------------------------- Clues --------------------------------------------
+
+#define VAR_CLUE_WILDERNESS_HARD_IDS [2723,2725,2727,2729,2731,2733,2735,2737,2739,2741,2743,2745,2747,2786,2788,3525,3556,3558,7239,7260,7262,7264,10244,10234,12546,12564,19888,23168,23169]
+#define VAR_CLUE_WILDERNESS_ELITE_IDS [12075,12093,12095,12097,12109,12101,12134,12150,19807,23144,23146]
+#define VAR_CLUE_ENTRANA_IDS []
+#define VAR_CLUE_MEDIUM_ITEMS_NAMES ["Key (medium)"]
+#define VAR_CLUE_ELITE_ITEMS_NAMES ["Mangled bones", "Key (elite)"] 
+
+apply (name:["Clue scroll (beginner)", "Clue bottle (beginner)", "Clue nest (beginner)", "Clue geode (beginner)", "Scroll box (beginner)", "Reward casket (beginner)", "Challenge scroll (beginner)"]) {
+	hidden=false;
+	textColor="#ffbf9bbf";
+	backgroundColor="#99333333";
+	borderColor="#ffbf9bbf";
+}
+
+apply (name:["Clue scroll (easy)", "Clue bottle (easy)", "Clue nest (easy)", "Clue geode (easy)", "Scroll box (easy)", "Reward casket (easy)", "Challenge scroll (easy)"]) {
+	hidden=false;
+	textColor="#ff00a33c";
+	backgroundColor="#99333333";
+	borderColor="#ff00a33c";
+}
+
+apply (name:["Clue scroll (medium)", "Clue bottle (medium)", "Clue nest (medium)", "Clue geode (medium)", "Scroll box (medium)", "Reward casket (medium)", "Challenge scroll (medium)"] || name:VAR_CLUE_MEDIUM_ITEMS_NAMES) {
+	hidden=false;
+	textColor="#ff52c7de";
+	backgroundColor="#99333333";
+	borderColor="#ff52c7de";
+}
+
+apply (name:["Clue scroll (hard)", "Clue bottle (hard)", "Clue nest (hard)", "Clue geode (hard)", "Scroll box (hard)", "Reward casket (hard)", "Challenge scroll (hard)"]) {
+	hidden=false;
+	textColor="#ffab43f0";
+	backgroundColor="#99333333";
+	borderColor="#ffab43f0";
+}
+
+apply (name:["Clue scroll (elite)", "Clue bottle (elite)", "Clue nest (elite)", "Clue geode (elite)", "Scroll box (elite)", "Reward casket (elite)", "Challenge scroll (elite)"] || name:VAR_CLUE_ELITE_ITEMS_NAMES) {
+	hidden=false;
+	textColor="#ffe6ad29";
+	backgroundColor="#99333333";
+	borderColor="#ffe6ad29";
+}
+
+apply (name:["Challenge scroll (elite)"]) {
+	fontType=FONT_BOLD;
+}
+
+// Elite Jardic step
+apply (id:21524) {
+	fontType=FONT_BOLD;
+	showLootbeam=true;
+}
+
+apply (name:["Scroll box (*)", "Reward casket (*)", "Mimic"]){
+	sound=1458;
+}
+
+apply (name:["Clue scroll (master)", "Clue bottle (master)", "Clue nest (master)", "Clue geode (master)", "Scroll box (master)", "Reward casket (master)", "Challenge scroll (master)", "Mimic"]) {
+	hidden=false;
+	textColor="#ffc90808";
+	backgroundColor="#99333333";
+	borderColor="#ffc90808";
+}
+
+rule (id:VAR_CLUE_WILDERNESS_HARD_IDS || id:VAR_CLUE_WILDERNESS_ELITE_IDS) {
+	hidden=false;
+	borderColor="#ffff0000";
+	menuTextColor="#ffff0000";
+}
+
+rule (name:["Clue scroll*", "Clue bottle*", "Clue nest*", "Clue geode*", "Scroll box*", "Reward casket (*)", "Challenge scroll (*)"] || name: VAR_CLUE_ELITE_ITEMS_NAMES || name:VAR_CLUE_MEDIUM_ITEMS_NAMES) {
+}
+// -------------------------------------- End Clues ----------------------------------------
+// -------------------------------------- Resources ----------------------------------------
+// General items, only care about noted
+#define VAR_G_GEMS ["Uncut sapphire", "Uncut emerald", "Uncut ruby", "Uncut diamond", "Uncut opal", "Uncut jade", "Uncut red topaz", "Sapphire", "Emerald", "Ruby", "Diamond", "Opal", "Jade", "Red topaz"]
+#define VAR_G_ORES ["Copper ore", "Tin ore", "Iron ore", "Silver ore", "Lead ore", "Coal", "Gold ore", "Mithril ore", "Nickel ore"]
+#define VAR_G_LOGS ["Maple logs", "Yew logs", "Magic logs", "Redwood logs", "Teak logs", "Mahogany logs", "Camphor logs", "Ironwood logs", "Rosewood logs"]
+#define VAR_G_AMMO ["Runite bolts (unf)", "Runite bolts", "Rune dart tip", "Rune dart", "Rune arrowtips", "Rune arrow", "Rune javelin tips", "Rune javelin"]
+#define VAR_G_CRAFTING ["Bucket of sand", "Green dragonhide", "Blue dragonhide", "Red dragonhide", "Air orb", "Earth orb", "Fire orb", "Water orb", "Molten glass", "Flax", "Swamp tar"]
+#define VAR_G_COOKING ["Grapes"]
+
+// Rare items
+#define VAR_R_GEMS ["Uncut dragonstone", "Uncut onyx", "Uncut zenyte", "Dragonstone", "Onyx", "Zenyte"]
+#define VAR_R_ORES ["Adamantite ore", "Runite ore"]
+#define VAR_R_FISHING ["Shark lure", "Diabolic worms", "Spirit flakes", "Fish offcuts", "Fine fish offcuts"]
+#define VAR_R_AMMO ["Dragon bolts (unf)", "Dragon bolts", "Dragon dart tip", "Dragon dart", "Dragon arrowtips", "Dragon arrow", "Onyx bolt tips", "Onyx bolts", "Onyx bolts (e)", "Dragon javelin tips", "Dragon javelin", "Toktz-xil-ul"]
+#define VAR_R_CRAFTING ["Black dragonhide"]
+#define VAR_R_SINGLE_DROP_RESOURCES ["Broken antler"]
+
+// Golem crafting
+#define CONST_AREA_WYRMSCRAIG_GOLEMS [2586, 2238, 0, 2603, 2261, 3]
+rule(area:CONST_AREA_WYRMSCRAIG_GOLEMS && (name:VAR_G_GEMS || name:["Sunstone", "Sunstone core"])) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_RESOURCES;
+	fontType=FONT_SMALL;
+}
+
+#define CONST_GENERAL_RESOURCES(_) ( \
+	(stackable:true || noted:true) && \
+	( \
+		quantity:>=MIN_RESOURCES_GENERAL &&  \
+		( \
+			name:VAR_G_GEMS || \
+			name:VAR_G_ORES || \
+			name:VAR_G_LOGS || \
+			name:VAR_G_CRAFTING \
+		) \
+	) || \
+	( \
+		quantity:>=MIN_RESOURCES_AMMO_COOKING && \
+		( \
+			name:VAR_G_AMMO || \
+			name:VAR_G_COOKING \
+		) \
+	) \
+) 
+
+#define CONST_RARE_RESOURCES(_) ( \
+	(stackable:true || noted:true) && \
+	(\
+		quantity:>=MIN_RESOURCES_RARE && \
+		( \
+			name:VAR_R_GEMS || \
+			name:VAR_R_ORES || \
+			name:VAR_R_FISHING || \
+			name:VAR_R_CRAFTING || \
+			name:VAR_R_AMMO \
+		) \
+	) || \
+	(\
+		name:VAR_R_SINGLE_DROP_RESOURCES \
+	)\
+)
+
+#define CONST_UNSTACKABLE_RARE_RESOURCES(_) ( \
+	name:VAR_R_GEMS \
+) 
+
+rule (CONST_GENERAL_RESOURCES(0) || CONST_RARE_RESOURCES(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_RESOURCES;
+	fontType=FONT_NORMAL;
+}
+
+rule (CONST_UNSTACKABLE_RARE_RESOURCES(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_RESOURCES;
+	fontType=FONT_BOLD;
+}
+
+// Other potential unstackables
+// -------------------------------------- End Resources ------------------------------------
+// -------------------------------------- Hunter -------------------------------------------
+#define VAR_HUNTER []
+#define VAR_HUNTER_MAGGOT_KING ["Stymphike feather", "Letvek"]
+
+#define CONST_HUNTER(_) ( \
+	name:VAR_HUNTER || \
+	name:VAR_HUNTER_MAGGOT_KING \
+)
+
+rule (CONST_HUNTER(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_HUNTER_SUPPLIES;
+	fontType=FONT_SMALL;
+}
+
+// -------------------------------------- End Hunter ---------------------------------------
+// -------------------------------------- Herblore -----------------------------------------
+#define VAR_HERB_LV ["Grimy guam leaf", "Guam leaf", "Grimy marrentill", "Marrentill", "Grimy tarromin", "Tarromin", "Grimy harralander", "Harralander", "Grimy irit leaf", "Irit leaf", "Grimy avantoe", "Avantoe", "Grimy kwuarm", "Kwuarm", "Grimy cadantine", "Cadantine", "Grimy Lantadyme", "Lantadyme", "Grimy dwarf weed", "Dwarf weed", "Limpwurt root", "Araxyte venom sac"]
+#define VAR_HERB_RARE ["Grimy ranarr weed", "Ranarr weed", "Grimy toadflax", "Toadflax", "Grimy huasca", "Huasca", "Grimy Snapdragon", "Snapdragon", "Grimy torstol", "Torstol", "Snape grass"]
+#define VAR_HERB_UNSTACKABLE ["Barrel of demonic tallow*", "Grapevine", "Bird nest", "Giant egg sac*", "Scaly blue dragonhide", "Alchemist's signet"]
+#define VAR_HERB_SECONDARIES ["Potato cactus", "White berries", "Unicorn horn", "Mort myre fungus", "Wine of zamorak", "Red spiders' eggs", "Coconut"]
+
+#define CONST_HERB_STACKABLE_LV(_) ( \
+	(stackable:true || noted:true) && \
+	( \
+		quantity:>=MIN_HERBLORE_LOW_LEVEL && \
+		( \
+			name:VAR_HERB_LV \
+		) \
+	) || \
+	( \
+		quantity:>=MIN_HERBLORE_SECONDARIES && \
+		( \
+			name:VAR_HERB_SECONDARIES \
+		) \
+	) \
+)
+
+#define CONST_HERB_STACKABLE_RARE(_) ( \
+	(stackable:true || noted:true) && \
+	quantity:>=MIN_HERBLORE_HIGH_LEVEL && \
+	( \
+		name:VAR_HERB_RARE \
+	) \
+)
+
+#define CONST_HERB_UNSTACKABLE(_) ( \
+	name:VAR_HERB_UNSTACKABLE \
+)
+
+apply(CONST_HERB_STACKABLE_LV(0)) {
+	fontType=FONT_NORMAL;
+}
+
+apply (CONST_HERB_STACKABLE_RARE(0) || CONST_HERB_UNSTACKABLE(0)) {
+	fontType=FONT_BOLD;
+}
+
+rule (CONST_HERB_STACKABLE_LV(0) || CONST_HERB_STACKABLE_RARE(0) || CONST_HERB_UNSTACKABLE(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_HERB_SUPPLIES;
+}
+
+// -------------------------------------- End Herblore -------------------------------------
+// -------------------------------------- Farming ------------------------------------------
+#define VAR_SEEDS_LV_HERB ["Guam seed", "Marrentill seed", "Tarromin seed", "Harralander seed", "Irit seed", "Avantoe seed", "Kwuarm seed", "Cadantine seed", "Lantadyme seed", "Dwarf weed seed"]
+#define VAR_SEEDS_LV_GENERAL ["Watermelon seed", "Grapes seed", "Mushroom spore", "Elkhorn frag", "Pillar frag", "Hemp seed", "Cotton seed", "Limpwurt seed"]
+#define VAR_SEEDS_LV_FARM ["Maple seed", "Teak seed", "Pineapple seed", "Papaya seed"]
+
+#define VAR_SEEDS_HERB ["Ranarr seed", "Toadflax seed", "Snapdragon seed", "Huasca seed", "Torstol seed", "Snape grass seed"]
+#define VAR_SEEDS_GENERAL ["White lily seed", "Seaweed spore", "Belladonna seed", "Hespori seed", "Umbral frag"]
+#define VAR_SEEDS_FARM ["Yew seed", "Magic seed", "Mahogany seed", "Camphor seed", "Ironwood seed", "Rosewood seed", "Calquat tree seed", "Crystal acorn", "Spirit seed", "Celastrus seed", "Redwood tree seed", "Palm tree seed", "Dragonfruit tree seed"]
+#define VAR_SEEDS_SUPPLEMENTS ["Supercompost"]
+
+#define CONST_SEEDS_LV(_) ( \
+	(stackable:true || noted:true) && \
+	quantity:>=MIN_FARMING_LOW_LEVEL && ( \
+		name:VAR_SEEDS_LV_HERB || \
+		name:VAR_SEEDS_LV_GENERAL || \
+		name:VAR_SEEDS_LV_FARM \
+	) \
+)
+
+#define CONST_SEEDS_RARE(_) ( \
+	(stackable:true || noted:true) && \
+	quantity:>=MIN_FARMING_HIGH_LEVEL && ( \
+		name:VAR_SEEDS_HERB || \
+		name:VAR_SEEDS_GENERAL || \
+		name:VAR_SEEDS_FARM || \
+		name:VAR_SEEDS_SUPPLEMENTS \
+	) \
+) 
+
+apply(CONST_SEEDS_LV(0)) {
+	fontType=FONT_NORMAL;
+}
+
+apply (CONST_SEEDS_RARE(0)) {
+	fontType=FONT_BOLD;
+}
+
+rule (CONST_SEEDS_LV(0) || CONST_SEEDS_RARE(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_SEEDS;
+}
+// -------------------------------------- End Farming --------------------------------------
+// -------------------------------------- Currensies ---------------------------------------
+#define VAR_CURRENCIES ["Brimstone key", "Granite dust", "*cannonball", "*teleport", "*teleport scroll", "Gryphon feather", "Ecumenical key", "Ecumenical key shard", "Nihil shard", "Right skull half", "Left skull half", "Top of sceptre", "Bottom of sceptre", "Mossy key", "Giant key", "Numulite", "Unidentified * fossil", "Sunfire splinters", "Blood essence", "Grubby key", "Crystal shard", "Zulrah's scales", "Tokkul", "Ancient shard", "Warrior guild token"]
+#define VAR_CURRENCIES_RDT ["Loop half of key", "Tooth half of key", "Shield left half", "Crystal key", "Long bone", "Curved bone"]
+#define VAR_CURRENCIES_WILDY ["Slayer's enchantment", "Larran's key", "Sinister key", "Revenant ether"]
+
+#define VAR_RUNES_LOW ["Air rune", "Mind rune", "Water rune", "Earth rune", "Fire rune", "Body rune", "Nature rune", "Law rune", "Cosmic rune", "Mist rune", "Dust rune", "Mud rune", "Smoke rune", "Steam rune", "Lava rune"]
+#define VAR_RUNES_HIGH ["Chaos rune", "Death rune", "Sunfire rune", "Astral rune", "Blood rune", "Soul rune", "Wrath rune", "Aether rune", "Aether catalyst"]
+
+#define VAR_CURRENCIES_MAGGOT_KING ["Blood sac", "Venator fang", "Venator tooth"]
+#define VAR_CURRENCIES_YAMA ["Dossier", "Oathplate shards", "Forgotten lockbox"]
+#define VAR_CURRENCIES_MOLE ["Mole claw", "Mole skin"]
+#define VAR_CURRENCIES_MOXY ["Frozen tear"]
+#define VAR_CURRENCIES_HUEY ["Soiled page"]
+#define VAR_CURRENCIES_MUSPAH ["Ancient essence", "Frozen cache"]
+#define VAR_CURRENCIES_TITANS ["Desiccated page"]
+
+#define VAR_CURRENCIES_PRAYER ["Infernal ashes", "Abyssal ashes", "Wyrm bones", "Strykewyrm bones", "Wyvern bones", "Dragon bones", "Drake bones", "Fayrg bones", "Lava dragon bones", "Raurg bones", "Frost dragon bones", "Hydra bones", "Dagannoth bones", "Ourg bones", "Superior dragon bones", "Loar remains", "Phrin remains", "Riyl remains", "Asyn remains", "Fiyr remains", "Urium remains", "Ensouled bloodveld head", "Ensouled tzhaar head", "Ensouled demon head", "Ensouled hellhound head", "Ensouled aviansie head", "Ensouled abyssal head", "Ensouled dragon head", "Giant bones", "Blessed bone shards", "Sun-kissed bones"]
+
+#define CONST_CURRENCIES(_) ( \
+	( \
+		(stackable:true || noted:true || tradeable:false) && \
+		( \
+			name:VAR_CURRENCIES || \
+			name:VAR_CURRENCIES_MAGGOT_KING || \
+			name:VAR_CURRENCIES_YAMA || \
+			name:VAR_CURRENCIES_MOLE || \
+			name:VAR_CURRENCIES_MOXY || \
+			name:VAR_CURRENCIES_MUSPAH || \
+			name:VAR_CURRENCIES_HUEY || \
+			name:VAR_CURRENCIES_TITANS \
+		) \
+	) || \
+	( \
+		name:VAR_CURRENCIES_RDT \
+	) || \
+	( \
+		name:VAR_CURRENCIES_PRAYER \
+	) || \
+	( \
+		name:VAR_CURRENCIES_WILDY \
+	) \
+)
+
+#define CONST_RUNES(_) ( \
+	stackable:true && \
+	( \
+		(name:VAR_RUNES_LOW && quantity:>=MIN_CURRENCIES_RUNES_LOW_LEVEL) || \
+		(name:VAR_RUNES_HIGH && quantity:>=MIN_CURRENCIES_RUNES_HIGH_LEVEL) || \
+		(name:["Pure essence"] && quantity:>MIN_CURRENCIES_RUNES_PURE_ESS) \
+	) \
+)
+
+#define CONST_COINS(_) ( \
+	name:"Coins" && quantity:>=MIN_CURRENCIES_COINS \
+)
+
+rule (CONST_CURRENCIES(0) || CONST_RUNES(0) || CONST_COINS(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_CURRENCIES;
+	fontType=FONT_BOLD;
+}
+
+// -------------------------------------- End Currensies -----------------------------------
+// -------------------------------------- Supplies -----------------------------------------
+#define VAR_SUPPLIES_HEALTH ["Shark", "Marlin", "Monkfish", "Manta ray", "Anglerfish", "Yellowfin", "Cooked karambwan", "Pineapple pizza", "1/2 pineapple pizza", "Wild pie", "Half a wild pie", "Summer pie", "Half a summer pie", "Saradomin brew(*)", "Tuna potato", "Dark crab", "Blighted anglerfish", "Blighted karambwan", "Sea turtle", "Mushroom potato", "Egg potato"]
+#define VAR_SUPPLIES_PRAYER ["Super restore mix(*)", "Prayer potion(*)", "Super restore(*)", "Blighted super restore(*)", "Sanfew serum(*)"]
+#define VAR_SUPPLIES_STAT ["Super combat potion(*)", "Divine super combat potion(*)", "Salve amulet (e)", "Antidote++(*)", "Ranging potion(*)", "Divine ranging potion(*)", "Superantipoison(*)"]
+
+#define VAR_SUPPLIES_PRAYER_MAGGOT_KING ["Dull ancient medal"] //Not usable outside the fight
+
+// Only supplies which can help with the current fight
+#define CONST_SUPPLIES_HEALTH_IN_FIGHT(_) ( \
+	noted:false && \
+	( \
+		name:VAR_SUPPLIES_HEALTH \
+	) \
+)
+
+#define CONST_SUPPLIES_PRAYER_IN_FIGHT(_) ( \
+	noted:false && \
+	( \
+		name:VAR_SUPPLIES_PRAYER || \
+		name:VAR_SUPPLIES_PRAYER_MAGGOT_KING \
+	) \
+)
+
+#define CONST_SUPPLIES_STAT_IN_FIGHT(_) (\
+	noted:false && \
+	( \
+		name:VAR_SUPPLIES_STAT \
+	) \
+)
+
+// Noted supplies
+#define CONST_SUPPLIES_HEALTH(_) ( \
+	(stackable:true || noted:true) && \
+	( \
+		name:VAR_SUPPLIES_HEALTH || \
+		name:"Raw*" \
+	) \
+)
+
+#define CONST_SUPPLIES_PRAYER(_) ( \
+	(stackable:true || noted:true) && \
+	( \
+		name:VAR_SUPPLIES_PRAYER \
+	) \
+)
+
+#define CONST_SUPPLIES_STAT(_) ( \
+	(stackable:true || noted:true) && \
+	( \
+		name:VAR_SUPPLIES_STAT \
+	) \
+)
+
+rule (CONST_SUPPLIES_HEALTH_IN_FIGHT(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_SUPPLIES_HEALTH;
+	fontType=FONT_BOLD;
+	menuSort=999;
+}
+
+rule (CONST_SUPPLIES_PRAYER_IN_FIGHT(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_SUPPLIES_PRAYER;
+	fontType=FONT_BOLD;
+	menuSort=888;
+}
+
+rule (CONST_SUPPLIES_STAT_IN_FIGHT(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_SUPPLIES_STAT_BOOST;
+	fontType=FONT_BOLD;
+	menuSort=777;
+}
+
+rule (CONST_SUPPLIES_HEALTH(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_SUPPLIES_HEALTH;
+	fontType=FONT_NORMAL;
+}
+
+rule (CONST_SUPPLIES_PRAYER(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_SUPPLIES_PRAYER;
+	fontType=FONT_NORMAL;
+}
+
+rule (CONST_SUPPLIES_STAT(0)) {
+	hidden=false;
+	showDespawn=true;
+	textColor=CONST_COLOR_SUPPLIES_STAT_BOOST;
+	fontType=FONT_NORMAL;
+}
+// -------------------------------------- End Supplies -------------------------------------
+// -------------------------------------- Uniques ------------------------------------------
+// Uniques, but really not care about them
+#define VAR_LV_UNIQUES ["Dragon 2h sword", "Dragon sword", "Dragon pickaxe", "Dragon chainbody", "Looting bag", "Ancient staff", "*defender", "Ancient page", "Mark of Grace"]
+
+#define VAR_LV_UNIQUES_MOLE ["Immaculate mole skin"]
+#define VAR_LV_UNIQUES_GWD ["Saradomin sword", "Saradomin's light", "Godsword shard*", "Steam battlestaff"]
+#define VAR_LV_UNIQUES_ARAXXOR ["Araxyte head"]
+#define VAR_LV_UNIQUES_HYDRA ["Hydra's eye", "Hydra's fang", "Hydra's heart", "Hydra tail", "Alchemical hydra heads", "Dragon thrownaxe", "Dragon knife"]
+#define VAR_LV_UNIQUES_MOXY ["Pendant of ates*", "Glacial temotli"]
+#define VAR_LV_UNIQUES_BRUTUS ["Mooleta", "Bottomless milk bucket", "Cow slippers"]
+#define VAR_LV_UNIQUES_CORP ["Spirit shield", "Holy elixir"]
+#define VAR_LV_UNIQUES_CRAZY_ARCH ["Fedora"]
+#define VAR_LV_UNIQUES_DERANGED_ARCH ["Steel ring"]
+#define VAR_LV_UNIQUES_DT2 ["Chromium ingot", "Awakener's orb", "Frozen tablet", "Ice quartz", "Strangled tablet", "Blood quartz", "Sirenic tablet", "Shadow quartz", "Scarred tablet", "Smoke quartz"]
+#define VAR_LV_UNIQUES_GG ["Granite maul"]
+#define VAR_LV_UNIQUES_HUEY ["Hueycoatl hide"]
+#define VAR_LV_UNIQUES_KQ ["Kq head*"]
+#define VAR_LV_UNIQUES_KBD ["Kbd heads"]
+#define VAR_LV_UNIQUES_NIGHTMARE ["Slepey tablet", "Parasitic egg"]
+#define VAR_LV_UNIQUES_MUSPAH ["Ancient icon"]
+#define VAR_LV_UNIQUES_TITANS ["Giantsoul amulet*", "Fire element staff crown", "Mystic vigour prayer scroll", "Ice element staff crown", "Deadeye prayer scroll"]
+#define VAR_LV_UNIQUES_SARACHNIS ["Pristine spider silk"]
+#define VAR_LV_UNIQUES_SCURRIUS ["Scurrius' spine"]
+#define VAR_LV_UNIQUES_VORKATH ["Vorkath's head", "Dragonbone necklace"]
+#define VAR_LV_UNIQUES_CREATURE_CREATION ["Tea flask", "*satchel"]
+#define VAR_LV_UNIQUES_REVS ["Amulet of avarice", "Ancient crystal", "Ancient emblem", "Ancient totem", "Bracelet of ethereum*"]
+#define VAR_LV_UNIQUES_SLAYER ["Crawling Hand", "Cockatrice head", "Basilisk head", "Kurask head", "Abyssal head", "Dust battlestaff", "Mist battlestaff", "Dark totem*", "Abyssal whip", "Granite maul", "Mudskipper hat", "Flippers", "Brine sabre", "Leaf-bladed sword", "Black mask*", "Granite longsword", "Granite boots", "Granite legs", "Granite helm", "Dragon boots", "Abyssal dagger", "Dark bow", "Mystic robe top (*)", "Mystic robe bottom (*)", "Mystic gloves (*)", "Mystic boots (*)", "Mystic hat (*)", "Drake's tooth", "Drake's claw", "Aquanite tendon", "Warped sceptre*", "Sulphur blades", "Earthbound tecpatl", "Antler guard"]
+#define VAR_LV_UNIQUES_MISC ["Chewed bones", "Dragon spear", "Shaman mask", "Fresh crab claw", "Fresh crab shell", "Xeric's talisman", "Mask of Ranul", "Broken zombie helmet", "Broken zombie axe"]
+
+#define VAR_UNIQUES ["Jeweller's chisel", "*champion scroll", "Elder chaos*"]
+#define VAR_UNIQUES_DRAGONS["Draconic visage", "Skeletal visage", "Wyvern visage", "Dragon metal sheet", "Dragon nails", "Dragon full helm", "Dragon metal slice", "Dragon metal lump", "Dragon limbs"]
+#define VAR_UNIQUES_DEMONIC_GORILLAS ["Zenyte shard", "Ballista limbs", "Ballista spring", "Light frame", "Heavy frame", "Monkey tail"]
+
+#define VAR_UNIQUES_MAGGOT_KING ["Elder venator fang", "Crimson kisten"]
+#define VAR_UNIQUES_YAMA ["Soulflame horn", "Oathplate helm", "Oathplate chest", "Oathplate legs"]
+#define VAR_UNIQUES_MAD_ANGEL ["Hallowfell", "Jar of light"]
+#define VAR_UNIQUES_GWD ["Armadyl crossbow", "Saradomin hilt", "Zamorakian spear", "Staff of the dead", "Zamorak hilt", "Bandos chestplate", "Bandos tassets", "Bandos boots", "Bandos hilt", "Armadyl helmet", "Armadyl chestplate", "Armadyl chainskirt", "Armadyl hilt"]
+// Horn technically is from regular mobs
+#define VAR_UNIQUES_SHELLBANE_GRYPHON ["Belle's folly*", "Jar of feathers", "Horn of plenty*"]
+// Loot should go to the inv, but in case it is full. Aranea boots are from smaller araxxites
+#define VAR_UNIQUES_ARAXXOR ["Noxious *", "Araxyte fang", "Jar of venom", "Aranea boots"]
+#define VAR_UNIQUES_DKS ["Dragon axe", "Berserker ring", "Warrior ring", "Mud battlestaff", "Seers ring", "Seercull", "Archers ring"]
+#define VAR_UNIQUES_HYDRA ["Hydra leather", "Hydra's claw", "Jar of chemicals"]
+#define VAR_UNIQUES_BRYO ["Bryophyta's essence"]
+#define VAR_UNIQUES_OBOR ["Hill giant club"]
+#define VAR_UNIQUES_SIRE ["Unsired"]
+#define VAR_UNIQUES_ARTIO ["Claws of callisto", "Voidwaker hilt", "Tyrannical ring"]
+#define VAR_UNIQUES_VENENATIS ["Fangs of venenatis", "Voidwaker gem", "Treasonous ring"]
+#define VAR_UNIQUES_VETION ["Skull of vet'ion", "Voidwaker blade", "Ring of the gods"]
+#define VAR_UNIQUES_CERB ["Primordial crystal", "Pegasian crystal", "Eternal crystal", "Smouldering stone", "Jar of souls"]
+#define VAR_UNIQUES_WILDY_SHIELDS ["Odium shard *", "Malediction shard *"]
+#define VAR_UNIQUES_CORP ["Spectral sigil", "Arcane sigil", "Elysian sigil", "Jar of spirits"]
+#define VAR_UNIQUES_DT2 ["Ancient blood ornament kit", "Virtus mask", "Virtus robe top", "Virtus robe bottom", "Magus vestige", "Eye of the duke", "Ultor vestige", "Executioner's axe head", "Bellator vestige", "Siren's staff", "Venator vestige", "Leviathan's lure"]
+#define VAR_UNIQUES_GG ["Granite gloves", "Granite ring", "Granite hammer", "Black tourmaline core", "Jar of stone"]
+#define VAR_UNIQUES_HUEY ["Tome of earth*", "Dragon hunter wand"]
+#define VAR_UNIQUES_KQ ["Jar of sand"]
+#define VAR_UNIQUES_KRAKEN ["Trident of the seas*", "Kraken tentacle", "Jar of dirt"]
+#define VAR_UNIQUES_NEX ["Zaryte vambraces", "Nihil horn", "Torva full helm*", "Torva platebody*", "Torva platelegs*", "Ancient hilt"]
+#define VAR_UNIQUES_NIGHTMARE ["Nightmare staff", "Inquisitor's great helm", "Inquisitor's hauberk", "Inquisitor's plateskirt", "Inquisitor's mace", "Eldritch orb", "Harmonised orb", "Volatile orb", "Jar of dreams"]
+#define VAR_UNIQUES_MUSPAH ["Venator shard"]
+#define VAR_UNIQUES_SARACHNIS ["Sarachnis cudgel", "Jar of eyes"]
+#define VAR_UNIQUES_THERMY ["Occult necklace", "Smoke battlestaff", "Jar of smoke"]
+#define VAR_UNIQUES_VORKATH ["Jar of decay"]
+#define VAR_UNIQUES_ZALCANO ["Crystal tool seed", "Zalcano shard"]
+#define VAR_UNIQUES_ZULRAH ["Tanzanite fang", "Magic fang", "Serpentine visage", "Tanzanite mutagen", "Magma mutagen", "Jar of swamp"]
+#define VAR_UNIQUES_REVS ["Craw's bow*", "Thammaron's sceptre*", "Viggora's chainmace*", "Ancient statuette", "Ancient medallion", "Ancient effigy", "Ancient relic"]
+#define VAR_UNIQUES_SLAYER ["Eternal gem", "Imbued heart", "Blood shard", "Leaf-bladed battleaxe", "Dragon harpoon", "Basilisk jaw", "Ancient ceremonial*", "Teleport anchoring scroll"]
+#define VAR_UNIQUES_TORMENTED_DEMONS ["Tormented synapse", "Burning claw"]
+#define VAR_UNIQUES_TZ_HAAR ["Obsidian cape", "Toktz-ket-xil", "Tzhaar-ket-om", "Toktz-xil-ak", "Toktz-xil-ek", "Toktz-mej-tal", "Obsidian helmet", "Obsidian platebody", "Obsidian platelegs"]
+#define VAR_UNIQUES_MISC ["Dragon warhammer", "Pharaoh's sceptre", "Crystal grail", "Enhanced crystal teleport seed"]
+#define VAR_UNIQUES_TEMPLE_TREKKING ["Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots"]
+
+#define CONST_LV_UNIQUES(_) ( \
+	name:VAR_LV_UNIQUES || \
+	name:VAR_LV_UNIQUES_MOLE || \
+	name:VAR_LV_UNIQUES_GWD || \
+	name:VAR_LV_UNIQUES_ARAXXOR || \
+	name:VAR_LV_UNIQUES_HYDRA || \
+	name:VAR_LV_UNIQUES_MOXY || \
+	name:VAR_LV_UNIQUES_BRUTUS || \
+	name:VAR_LV_UNIQUES_CORP || \
+	name:VAR_LV_UNIQUES_CRAZY_ARCH || \
+	name:VAR_LV_UNIQUES_DERANGED_ARCH || \
+	name:VAR_LV_UNIQUES_DT2 || \
+	name:VAR_LV_UNIQUES_GG || \
+	name:VAR_LV_UNIQUES_HUEY || \
+	name:VAR_LV_UNIQUES_KQ || \
+	name:VAR_LV_UNIQUES_KBD || \
+	name:VAR_LV_UNIQUES_NIGHTMARE || \
+	name:VAR_LV_UNIQUES_MUSPAH || \
+	name:VAR_LV_UNIQUES_TITANS || \
+	name:VAR_LV_UNIQUES_SARACHNIS || \
+	name:VAR_LV_UNIQUES_SCURRIUS || \
+	name:VAR_LV_UNIQUES_VORKATH || \
+	name:VAR_LV_UNIQUES_CREATURE_CREATION || \
+	name:VAR_LV_UNIQUES_REVS || \
+	name:VAR_LV_UNIQUES_SLAYER || \
+	name:VAR_LV_UNIQUES_MISC \
+)
+
+#define CONST_UNIQUES(_) ( \
+	name:VAR_UNIQUES || \
+	name:VAR_UNIQUES_MAGGOT_KING || \
+	name:VAR_UNIQUES_YAMA || \
+	name:VAR_UNIQUES_MAD_ANGEL || \
+	name:VAR_UNIQUES_GWD || \
+	name:VAR_UNIQUES_SHELLBANE_GRYPHON || \
+	name:VAR_UNIQUES_ARAXXOR || \
+	name:VAR_UNIQUES_DKS || \
+	name:VAR_UNIQUES_HYDRA || \
+	name:VAR_UNIQUES_BRYO || \
+	name:VAR_UNIQUES_OBOR || \
+	name:VAR_UNIQUES_SIRE || \
+	name:VAR_UNIQUES_ARTIO || \
+	name:VAR_UNIQUES_CERB || \
+	name:VAR_UNIQUES_WILDY_SHIELDS || \
+	name:VAR_UNIQUES_CORP || \
+	name:VAR_UNIQUES_DT2 || \
+	name:VAR_UNIQUES_GG || \
+	name:VAR_UNIQUES_HUEY || \
+	name:VAR_UNIQUES_KQ || \
+	name:VAR_UNIQUES_KRAKEN || \
+	name:VAR_UNIQUES_NEX || \
+	name:VAR_UNIQUES_NIGHTMARE || \
+	name:VAR_UNIQUES_MUSPAH || \
+	name:VAR_UNIQUES_SARACHNIS || \
+	name:VAR_UNIQUES_THERMY || \
+	name:VAR_UNIQUES_VENENATIS || \
+	name:VAR_UNIQUES_VETION || \
+	name:VAR_UNIQUES_DRAGONS || \
+	name:VAR_UNIQUES_VORKATH || \
+	name:VAR_UNIQUES_ZALCANO || \
+	name:VAR_UNIQUES_ZULRAH || \
+	name:VAR_UNIQUES_DEMONIC_GORILLAS || \
+	name:VAR_UNIQUES_REVS || \
+	name:VAR_UNIQUES_SLAYER || \
+	name:VAR_UNIQUES_TORMENTED_DEMONS || \
+	name:VAR_UNIQUES_TZ_HAAR || \
+	name:VAR_UNIQUES_MISC || \
+	name:VAR_UNIQUES_TEMPLE_TREKKING \
+)
+
+apply (CONST_UNIQUES(0) || CONST_LV_UNIQUES(0)) {
+	hidden = false;
+	showDespawn=true;
+	borderColor=CONST_COLOR_UNIQUES;
+	textColor=CONST_COLOR_UNIQUES;
+	menuSort=999;
+}
+
+rule (CONST_LV_UNIQUES(0)) {
+	showLootbeam=false;
+	fontType=FONT_NORMAL;
+}
+
+rule (CONST_UNIQUES(0)) {
+	showLootbeam=true;
+	fontType=FONT_BOLD;
+	sound=6765;
+}
+
+// -------------------------------------- End Uniques --------------------------------------
+// -------------------------------------- COX ----------------------------------------------
+rule (CONST_AREA_RAID(0) && CONST_TAKEABLE(0) && name:["Overload*"]) {
+	hidden = false;
+	textColor=CONST_COLOR_SUPPLIES_STAT_BOOST;
+	fontType=FONT_SMALL;
+	menuSort=999;
+}
+
+
+rule (CONST_AREA_RAID(0) && CONST_TAKEABLE(0) && name:["Prayer enhance*"]) {
+	hidden = false;
+	textColor=CONST_COLOR_SUPPLIES_STAT_BOOST;
+	fontType=FONT_SMALL;
+	menuSort=888;
+}
+
+rule (CONST_AREA_RAID(0) && CONST_TAKEABLE(0) && name:["Endarkened juice", "Xeric's aid*", "Psykk bat*"]) {
+	hidden = false;
+	textColor=CONST_COLOR_SUPPLIES_HEALTH;
+	fontType=FONT_SMALL;
+	menuSort=777;
+}
+
+rule (CONST_AREA_RAID(0) && CONST_TAKEABLE(0) && name:["Stinkhorn mushroom", "Revitalisation*"]) {
+	hidden = false;
+	textColor=CONST_COLOR_SUPPLIES_PRAYER;
+	fontType=FONT_SMALL;
+	menuSort=666;
+}
+
+rule (CONST_AREA_RAID(0) && CONST_TAKEABLE(0) && name:["Lockpick", "Mallignum root plank", "Kindling"]) {
+	hidden = false;
+	textColor="#299c2f";
+	fontType=FONT_SMALL;
+	menuSort=555;
+}
+
+rule (CONST_AREA_RAID(0) && CONST_TAKEABLE(0) && name:["Cicely", "Buchu seed", "Spade"]) {
+	hidden = false;
+	textColor="#1ecfe5";
+	fontType=FONT_SMALL;
+	menuSort=444;
+}
+// -------------------------------------- End COX ------------------------------------------
+// -------------------------------------- TOB ----------------------------------------------
+rule (CONST_AREA_RAID(0) && name:["Dawnbringer"]) {
+	hidden = false;
+	textColor="#1ecfe5";
+	fontType=FONT_BOLD;
+	menuSort=999;
+}
+// -------------------------------------- End TOB ------------------------------------------
+// -------------------------------------- CG -----------------------------------------------
+rule (name:["Weapon frame", "Crystal spike", "Crystalline bowstring", "Crystal orb", "Corrupted bowstring", "Corrupted spike", "Corrupted orb"]) {
+	hidden = false;
+	textColor="#1ecfe5";
+	fontType=FONT_BOLD;
+	menuSort=999;
+}
+
+rule (name:["Raw paddlefish", "Paddlefish", "Grym leaf"]) {
+	hidden = false;
+	textColor=CONST_COLOR_SUPPLIES_HEALTH;
+	fontType=FONT_SMALL;
+	menuSort=888;
+}
+// -------------------------------------- End CG -------------------------------------------
+// -------------------------------------- Catch all ----------------------------------------
+rule (value:>=10_000_000) {
+	hidden = false;
+	borderColor="#FFFF66B2";
+	showLootbeam=true;
+	showDespawn=true;
+	textColor="#FFFF66B2";
+	fontType=FONT_BOLD;
+	menuSort=999;
+	sound=6765;
+}
+
+rule (value:>=1_000_000) {
+	hidden = false;
+	borderColor="#FFFF9600";
+	showLootbeam=true;
+	showDespawn=true;
+	textColor="#FFFF9600";
+	fontType=FONT_BOLD;
+	menuSort=999;
+	sound=4198;
+}
+
+rule (value:>=100_000) {
+	hidden = false;
+	borderColor="#FF99FF99";
+	showLootbeam=true;
+	showDespawn=true;
+	textColor="#FF99FF99";
+	fontType=FONT_BOLD;
+	menuSort=999;
+	sound=4198;
+}
+
+rule (havalue:>=MIN_HA_THRESHOLD) {
+	hidden = false;
+	borderColor="#ffe800";
+	showDespawn=true;
+	textColor="#ffe800";
+	fontType=FONT_BOLD;
+	menuSort=900;
+}
+
+rule (name:"*") {
+	hidden = true;
+}
