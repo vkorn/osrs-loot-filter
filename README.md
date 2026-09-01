@@ -36,3 +36,19 @@ Install the Loot Filters plugin from the RuneLite Plugin Hub, then place `bemfil
 Select or reload the filter from the plugin panel.
 
 Review the item lists and thresholds before relying on it: the filter is tailored to one account's progression and intentionally does not track every collection-log item or reward delivered directly to the inventory.
+
+## Validation
+
+Run the included zero-dependency validator with Python 3 before committing changes:
+
+```console
+python validate_filter.py
+```
+
+Pass a path to validate another filter:
+
+```console
+python validate_filter.py path/to/filter.rs2f
+```
+
+The validator checks strings, comments, delimiters, preprocessor directives, multiline macro continuations, and undefined project macros. It complements the Loot Filters plugin parser; it does not replace full in-game testing.

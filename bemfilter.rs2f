@@ -4,7 +4,7 @@ meta {
 All notable resources (besides some too low lvl ones) are in.
 Clue rewards and most of other clogs going directly into inventory are not tracked.
 
-Possibly left: furs? 
+Possibly left: furs?
 "; 
 }
 
@@ -19,6 +19,8 @@ Possibly left: furs?
 #define MIN_HERBLORE_HIGH_LEVEL 1
 #define MIN_FARMING_LOW_LEVEL 3
 #define MIN_FARMING_HIGH_LEVEL 1
+#define MIN_FARMING_TREES_LOW_LEVEL 2
+#define MIN_FARMING_TREES_HIGH_LEVEL 1
 #define MIN_CURRENCIES_RUNES_LOW_LEVEL 200
 #define MIN_CURRENCIES_RUNES_HIGH_LEVEL 50
 #define MIN_CURRENCIES_RUNES_PURE_ESS 150
@@ -294,31 +296,47 @@ rule (CONST_HERB_STACKABLE_LV(0) || CONST_HERB_STACKABLE_RARE(0) || CONST_HERB_U
 // -------------------------------------- Farming ------------------------------------------
 #define VAR_SEEDS_LV_HERB ["Guam seed", "Marrentill seed", "Tarromin seed", "Harralander seed", "Irit seed", "Avantoe seed", "Kwuarm seed", "Cadantine seed", "Lantadyme seed", "Dwarf weed seed"]
 #define VAR_SEEDS_LV_GENERAL ["Watermelon seed", "Grapes seed", "Mushroom spore", "Elkhorn frag", "Pillar frag", "Hemp seed", "Cotton seed", "Limpwurt seed"]
-#define VAR_SEEDS_LV_FARM ["Maple seed", "Teak seed", "Pineapple seed", "Papaya seed"]
+#define VAR_SEEDS_LV_TREES ["Maple seed", "Teak seed", "Pineapple seed", "Papaya tree seed"]
 
 #define VAR_SEEDS_HERB ["Ranarr seed", "Toadflax seed", "Snapdragon seed", "Huasca seed", "Torstol seed", "Snape grass seed"]
 #define VAR_SEEDS_GENERAL ["White lily seed", "Seaweed spore", "Belladonna seed", "Hespori seed", "Umbral frag"]
-#define VAR_SEEDS_FARM ["Yew seed", "Magic seed", "Mahogany seed", "Camphor seed", "Ironwood seed", "Rosewood seed", "Calquat tree seed", "Crystal acorn", "Spirit seed", "Celastrus seed", "Redwood tree seed", "Palm tree seed", "Dragonfruit tree seed"]
+#define VAR_SEEDS_TREES ["Yew seed", "Magic seed", "Mahogany seed", "Camphor seed", "Ironwood seed", "Rosewood seed", "Calquat tree seed", "Crystal acorn", "Spirit seed", "Celastrus seed", "Redwood tree seed", "Palm tree seed", "Dragonfruit tree seed"]
 #define VAR_SEEDS_SUPPLEMENTS ["Supercompost"]
 
 #define CONST_SEEDS_LV(_) ( \
 	(stackable:true || noted:true) && \
-	quantity:>=MIN_FARMING_LOW_LEVEL && ( \
-		name:VAR_SEEDS_LV_HERB || \
-		name:VAR_SEEDS_LV_GENERAL || \
-		name:VAR_SEEDS_LV_FARM \
+	( \
+		quantity:>=MIN_FARMING_LOW_LEVEL && \
+		( \
+			name:VAR_SEEDS_LV_HERB || \
+			name:VAR_SEEDS_LV_GENERAL \
+		) \
+	) || \
+	( \
+		quantity:>=MIN_FARMING_TREES_LOW_LEVEL && \
+		( \
+			name:VAR_SEEDS_LV_TREES \
+		) \
 	) \
 )
 
 #define CONST_SEEDS_RARE(_) ( \
 	(stackable:true || noted:true) && \
-	quantity:>=MIN_FARMING_HIGH_LEVEL && ( \
-		name:VAR_SEEDS_HERB || \
-		name:VAR_SEEDS_GENERAL || \
-		name:VAR_SEEDS_FARM || \
-		name:VAR_SEEDS_SUPPLEMENTS \
+	(\
+		quantity:>=MIN_FARMING_HIGH_LEVEL && \
+		( \
+			name:VAR_SEEDS_HERB || \
+			name:VAR_SEEDS_GENERAL || \
+			name:VAR_SEEDS_SUPPLEMENTS \
+		) \
+	) || \
+	( \
+		quantity:>=MIN_FARMING_TREES_HIGH_LEVEL && \
+		( \
+			name:VAR_SEEDS_TREES \
+		) \
 	) \
-) 
+)
 
 apply(CONST_SEEDS_LV(0)) {
 	fontType=FONT_NORMAL;
