@@ -75,7 +75,7 @@ rule (!CONST_AREA_RAID(0) && ownership:OWNERSHIP_NONE && !name:VAR_OWNERSHIP_IGN
 
 #define VAR_CLUE_WILDERNESS_HARD_IDS [2723,2725,2727,2729,2731,2733,2735,2737,2739,2741,2743,2745,2747,2786,2788,3525,3556,3558,7239,7260,7262,7264,10244,10234,12546,12564,19888,23168,23169]
 #define VAR_CLUE_WILDERNESS_ELITE_IDS [12075,12093,12095,12097,12109,12101,12134,12150,19807,23144,23146]
-#define VAR_CLUE_ENTRANA_IDS []
+#define VAR_CLUE_ENTRANA_IDS [3579]
 #define VAR_CLUE_MEDIUM_ITEMS_NAMES ["Key (medium)"]
 #define VAR_CLUE_ELITE_ITEMS_NAMES ["Mangled bones", "Key (elite)"] 
 
@@ -141,13 +141,19 @@ rule (id:VAR_CLUE_WILDERNESS_HARD_IDS || id:VAR_CLUE_WILDERNESS_ELITE_IDS) {
 	menuTextColor="#ffff0000";
 }
 
-rule (name:["Clue scroll*", "Clue bottle*", "Clue nest*", "Clue geode*", "Scroll box*", "Reward casket (*)", "Challenge scroll (*)"] || name: VAR_CLUE_ELITE_ITEMS_NAMES || name:VAR_CLUE_MEDIUM_ITEMS_NAMES) {
+rule (id:VAR_CLUE_ENTRANA_IDS) {
+	hidden=false;
+	borderColor="#c1aac9";
+	menuTextColor="#c1aac9";
+}
+
+rule (name:["Clue scroll*", "Clue bottle*", "Clue nest*", "Clue geode*", "Scroll box*", "Reward casket (*)", "Challenge scroll (*)", "Mimic"] || name: VAR_CLUE_ELITE_ITEMS_NAMES || name:VAR_CLUE_MEDIUM_ITEMS_NAMES) {
 }
 // -------------------------------------- End Clues ----------------------------------------
 // -------------------------------------- Resources ----------------------------------------
 // General items, only care about noted
 #define VAR_G_GEMS ["Uncut sapphire", "Uncut emerald", "Uncut ruby", "Uncut diamond", "Uncut opal", "Uncut jade", "Uncut red topaz", "Sapphire", "Emerald", "Ruby", "Diamond", "Opal", "Jade", "Red topaz"]
-#define VAR_G_ORES ["Copper ore", "Tin ore", "Iron ore", "Silver ore", "Lead ore", "Coal", "Gold ore", "Mithril ore", "Nickel ore"]
+#define VAR_G_ORES ["Copper ore", "Tin ore", "Iron ore", "Silver ore", "Lead ore", "Coal", "Gold ore", "Mithril ore", "Nickel ore", "Bronze bar", "Iron bar", "Silver bar", "Lead bar", "Steel bar", "Gold bar", "Mithril bar", "Cupronickel bar"]
 #define VAR_G_LOGS ["Maple logs", "Yew logs", "Magic logs", "Redwood logs", "Teak logs", "Mahogany logs", "Camphor logs", "Ironwood logs", "Rosewood logs"]
 #define VAR_G_AMMO ["Runite bolts (unf)", "Runite bolts", "Rune dart tip", "Rune dart", "Rune arrowtips", "Rune arrow", "Rune javelin tips", "Rune javelin"]
 #define VAR_G_CRAFTING ["Bucket of sand", "Green dragonhide", "Blue dragonhide", "Red dragonhide", "Air orb", "Earth orb", "Fire orb", "Water orb", "Molten glass", "Flax", "Swamp tar"]
@@ -155,7 +161,7 @@ rule (name:["Clue scroll*", "Clue bottle*", "Clue nest*", "Clue geode*", "Scroll
 
 // Rare items
 #define VAR_R_GEMS ["Uncut dragonstone", "Uncut onyx", "Uncut zenyte", "Dragonstone", "Onyx", "Zenyte"]
-#define VAR_R_ORES ["Adamantite ore", "Runite ore"]
+#define VAR_R_ORES ["Adamantite ore", "Runite ore", "Adamantite bar", "Runite bar"]
 #define VAR_R_FISHING ["Shark lure", "Diabolic worms", "Spirit flakes", "Fish offcuts", "Fine fish offcuts"]
 #define VAR_R_AMMO ["Dragon bolts (unf)", "Dragon bolts", "Dragon dart tip", "Dragon dart", "Dragon arrowtips", "Dragon arrow", "Onyx bolt tips", "Onyx bolts", "Onyx bolts (e)", "Dragon javelin tips", "Dragon javelin", "Toktz-xil-ul"]
 #define VAR_R_CRAFTING ["Black dragonhide"]
@@ -353,9 +359,9 @@ rule (CONST_SEEDS_LV(0) || CONST_SEEDS_RARE(0)) {
 }
 // -------------------------------------- End Farming --------------------------------------
 // -------------------------------------- Currensies ---------------------------------------
-#define VAR_CURRENCIES ["Brimstone key", "Granite dust", "*cannonball", "*teleport", "*teleport scroll", "Gryphon feather", "Ecumenical key", "Ecumenical key shard", "Nihil shard", "Right skull half", "Left skull half", "Top of sceptre", "Bottom of sceptre", "Mossy key", "Giant key", "Numulite", "Unidentified * fossil", "Sunfire splinters", "Blood essence", "Grubby key", "Crystal shard", "Zulrah's scales", "Tokkul", "Ancient shard", "Warrior guild token"]
-#define VAR_CURRENCIES_RDT ["Loop half of key", "Tooth half of key", "Shield left half", "Crystal key", "Long bone", "Curved bone"]
-#define VAR_CURRENCIES_WILDY ["Slayer's enchantment", "Larran's key", "Sinister key", "Revenant ether"]
+#define VAR_CURRENCIES ["Brimstone key", "Granite dust", "*cannonball", "*teleport", "*teleport scroll", "Gryphon feather", "Ecumenical key", "Ecumenical key shard", "Nihil shard", "Right skull half", "Left skull half", "Top of sceptre", "Bottom of sceptre", "Mossy key", "Giant key", "Numulite", "Unidentified * fossil", "Sunfire splinters", "Blood essence", "Crystal shard", "Zulrah's scales", "Tokkul", "Ancient shard", "Warrior guild token"]
+#define VAR_CURRENCIES_RDT ["Loop half of key", "Tooth half of key", "Shield left half", "Crystal key", "Long bone", "Curved bone", "Grubby key"]
+#define VAR_CURRENCIES_WILDY ["Slayer's enchantment", "Larran's key", "Sinitser key", "Revenant ether"]
 
 #define VAR_RUNES_LOW ["Air rune", "Mind rune", "Water rune", "Earth rune", "Fire rune", "Body rune", "Nature rune", "Law rune", "Cosmic rune", "Mist rune", "Dust rune", "Mud rune", "Smoke rune", "Steam rune", "Lava rune"]
 #define VAR_RUNES_HIGH ["Chaos rune", "Death rune", "Sunfire rune", "Astral rune", "Blood rune", "Soul rune", "Wrath rune", "Aether rune", "Aether catalyst"]
@@ -417,7 +423,7 @@ rule (CONST_CURRENCIES(0) || CONST_RUNES(0) || CONST_COINS(0)) {
 
 // -------------------------------------- End Currensies -----------------------------------
 // -------------------------------------- Supplies -----------------------------------------
-#define VAR_SUPPLIES_HEALTH ["Shark", "Marlin", "Monkfish", "Manta ray", "Anglerfish", "Yellowfin", "Cooked karambwan", "Pineapple pizza", "1/2 pineapple pizza", "Wild pie", "Half a wild pie", "Summer pie", "Half a summer pie", "Saradomin brew(*)", "Tuna potato", "Dark crab", "Blighted anglerfish", "Blighted karambwan", "Sea turtle", "Mushroom potato", "Egg potato"]
+#define VAR_SUPPLIES_HEALTH ["Shark", "Marlin", "Monkfish", "Manta ray", "Anglerfish", "Yellowfin", "Cooked karambwan", "Pineapple pizza", "1/2 pineapple pizza", "Wild pie", "Half a wild pie", "Summer pie", "Half a summer pie", "Saradomin brew(*)", "Tuna potato", "Chilli potato", "Dark crab", "Blighted anglerfish", "Blighted karambwan", "Sea turtle", "Mushroom potato", "Egg potato"]
 #define VAR_SUPPLIES_PRAYER ["Super restore mix(*)", "Prayer potion(*)", "Super restore(*)", "Blighted super restore(*)", "Sanfew serum(*)"]
 #define VAR_SUPPLIES_STAT ["Super combat potion(*)", "Divine super combat potion(*)", "Salve amulet (e)", "Antidote++(*)", "Ranging potion(*)", "Divine ranging potion(*)", "Superantipoison(*)"]
 
